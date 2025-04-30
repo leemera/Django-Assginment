@@ -1,6 +1,6 @@
 from django.db import models
 
-class Tido(models.Model):
+class Todo(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     start_date = models.DateField()
