@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name = "yiewport" content = "width = device-width, initial-scale = 1.0">
-    <title>My Info</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +22,7 @@
         }
         h1 {
             text-align: center;
-            color: blue;
+            color: #333;
         }
         table {
             width: 100%;
@@ -33,11 +34,23 @@
             border-bottom: 1px solid #ddd;
         }
         th {
-            background: white;
+            background: #f0f0f0;
         }
     </style>
 </head>
 <body>
-
+    <div class="container">
+        <h1>{{ data.title }}</h1>
+        <table>
+            {% for key, value in data.items %}
+                {% if key != 'title' %}
+                    <tr>
+                        <th>{{ key }}</th>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>
