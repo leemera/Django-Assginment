@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+    }
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+    li {
+        background: #eaeaea;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    li:hover {
+        background: #d4d4d4;
+    }
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+    .create-button, .search-button {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .create-button:hover, .search-button:hover {
+        background: #0056b3;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .pagination a, .pagination span, .pagination p {
+        padding: 8px 16px;
+        margin: 0 2px;
+        text-decoration: none;
+        border-radius: 5px;
+        color: #007bff;
+    }
+    .pagination a.active {
+        background: #007bff;
+        color: #fff;
+    }
+    .pagination p {
+        color: gray;
+        cursor: not-allowed;
+    }
+    input[type="text"] {
+        width: 50%;
+        padding: 10px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="container">
+    {% if request.user.is_authenticated %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>{{ request.user.username }}'s Todo List</h1>
+        <button class="create-button" onclick="location.href='{% url 'todo_create' %}'">생성하기</button>
+    </div>
+
+    <form method="GET" style="margin: 20px 0;">
+        <input type="text" name="q" placeholder="제목 또는 내용을 입력하세요." value="{{ request.GET.q }}">
+        <button class="search-button">검색</button>
+    </form>
+
+    <ul>
+        {% for todo in page_obj.object_list %}
+            <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+        {% empty %}
+            <li>할 일이 없습니다.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+        {% else %}
+            <p>&laquo; 처음</p><p>이전</p>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                {% if num == page_obj.number %}
+                    <span class="active">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">끝 &raquo;</a>
+        {% else %}
+            <p>다음</p><p>끝 &raquo;</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
