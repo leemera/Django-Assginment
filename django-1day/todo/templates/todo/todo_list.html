@@ -74,10 +74,13 @@
 </style>
 
 <div class="container">
-    {% if request.user.is_authenticated %}
     <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>{{ request.user.username }}'s Todo List</h1>
-        <button class="create-button" onclick="location.href='{% url 'todo_create' %}'">생성하기</button>
+        {% if request.user.is_authenticated %}
+            <h1>{{ request.user.username }}'s Todo List</h1>
+        {% else %}
+            <h1>비회원용 Todo 리스트</h1>
+        {% endif %}
+        <button class="create-button" onclick="location.href='{% url 'cbv_todo_create' %}'">생성하기</button>
     </div>
 
     <form method="GET" style="margin: 20px 0;">
@@ -87,7 +90,7 @@
 
     <ul>
         {% for todo in page_obj.object_list %}
-            <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+            <li><a href="{% url 'cbv_todo_detail' todo.id %}">{{ todo.title }}</a></li>
         {% empty %}
             <li>할 일이 없습니다.</li>
         {% endfor %}
@@ -118,6 +121,5 @@
             <p>다음</p><p>끝 &raquo;</p>
         {% endif %}
     </div>
-    {% endif %}
 </div>
 {% endblock %}

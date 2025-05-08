@@ -1,4 +1,4 @@
-# users/views.py
+# users/cb_views.py
 
 from django.conf import settings
 from django.shortcuts import render, redirect
