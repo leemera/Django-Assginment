@@ -1,14 +1,28 @@
-# todo/forms.py
-
 from django import forms
-from .models import Todo
+from todo.models import Todo, Comment
+
 
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
-        fields = ['title', 'description', 'start_date', 'end_date']  # 필요한 필드 작성
+        fields = ['title', 'description', 'start_date', 'end_date']
+
 
 class TodoUpdateForm(forms.ModelForm):
     class Meta:
         model = Todo
-        fields = ['title', 'description', 'is_completed', 'start_date', 'end_date']
+        fields = ['title', 'description', 'start_date', 'end_date', 'is_completed']
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['message',]
+        labels = {
+            'message': '내용',
+        }
+        widgets = {
+            'message': forms.Textarea(attrs={
+                'rows': 3, 'cols': 40, 'class': 'form-control', 'placeholder': '댓글 내용을 입력해주세요.'
+            }),
+        }
