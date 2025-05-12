@@ -52,7 +52,7 @@ class TodoDetailView(LoginRequiredMixin, DetailView):
 
 class TodoCreateView(LoginRequiredMixin, CreateView):
     model = Todo
-    templates_name = 'todo/todo_create.html'
+    template_name = 'todo/todo_create.html'
     form_class = TodoForm
 
     def form_valid(self, form):

@@ -146,6 +146,7 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 SUMMERNOTE_CONFIG = {
  'iframe': True,
+ 'attachment_upload_to': 'summernote_uploads/',  # 👈 media/summernote_uploads 폴더에 저장됨
 
  'summernote': {
      'airMode': False,
