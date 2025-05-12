@@ -1,5 +1,11 @@
 from django.contrib import admin
 from .models import Todo
+from todo.models import Comment
+
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 0
+    fields = ('message', 'user')
 
 @admin.register(Todo)
 class TodoAdmin(admin.ModelAdmin):
