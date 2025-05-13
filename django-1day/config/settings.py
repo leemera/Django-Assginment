@@ -13,7 +13,6 @@ import os.path
 import json
 from pathlib import Path
 
-import SECRET
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.utils import get_random_secret_key
 
@@ -24,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_FILE = os.path.join(BASE_DIR, 'secret_config', 'secret.json')
 try:
     with open(SECRET_FILE) as f:
-        _secret = json.loads(f)
+        _secret = json.load(f)
 except FileNotFoundError:
     raise ImproperlyConfigured(f"Secret file not found at {SECRET_FILE}")
 
@@ -78,8 +77,9 @@ AUTH_USER_MODEL = 'users.User'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.naver.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = SECRET['EMAIL']['USER']
-EMAIL_HOST_PASSWORD = SECRET['EMAIL']['PASSWORD']
+EMAIL = get_secret("EMAIL")
+EMAIL_HOST_USER = EMAIL["USER"]
+EMAIL_HOST_PASSWORD = EMAIL['PASSWORD']
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -210,13 +210,4 @@ SUMMERNOTE_CONFIG = {
 
     # 첨부파일의 절대경로 URI 사용 설정
     'attachment_absolute_uri': True,
-}
-
-# .secret_config/secret.json
-{
- "DJANGO_SECRET_KEY": "your secretkey here",
- "EMAIL": {
- "USER": "your email here",
- "PASSWORD": "your email password here"
-  }
 }

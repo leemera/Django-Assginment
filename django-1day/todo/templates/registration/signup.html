@@ -1,77 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <style>
-        /* 기본적인 스타일 초기화 */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
+{% extends 'registration/base.html' %}
 
-        /* 컨테이너 스타일 */
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background: blanchedalmond;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+{% block content %}
+<style>
+    .signup-container {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
 
-        /* 제목 스타일 */
-        h1 {
-            text-align: center;
-            color: blue;
-            margin-bottom: 20px;
-        }
+    .signup-box {
+        background-color: #fffbea;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+</style>
 
-        /* 폼 스타일 */
-        .signup-form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .signup-form p {
-            margin: 10px 0;
-        }
-
-        /* 입력 필드 스타일 */
-        input[type="text"], input[type="password"], input[type="email"], input[type="date"], select, textarea {
-            width: 93%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        /* 버튼 스타일 */
-        .signup-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-
-        .signup-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <title>Sign Up</title>
-</head>
-<body>
-    <div class="container">
-        <h1>회원가입</h1>
-        <form method="POST" class="signup-form">
+<div class="container d-flex justify-content-center align-items-center signup-container">
+    <div class="signup-box w-50">
+        <form method="POST">
+            <h2 class="mb-4 text-center">회원가입</h2>
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="signup-button">Sign Up</button>
+            {% for field in form %}
+                <div class="form-group mb-3 row">
+                    <label for="{{ field.auto_id }}" class="form-label col-md-3">{{ field.label }}</label>
+                    <div class="col-md-9">
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success mt-4 px-4">Sign Up</button>
+            </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
