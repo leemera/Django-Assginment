@@ -10,17 +10,34 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os.path
+import json
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#secret_config/secret.json 파일 로딩
+SECRET_FILE = os.path.join(BASE_DIR, 'secret_config', 'secret.json')
+try:
+    with open(SECRET_FILE) as f:
+        _secret = json.load(f)
+except FileNotFoundError:
+    raise ImproperlyConfigured(f"Secret file not found at {SECRET_FILE}")
 
+def get_secret(setting, secret=_secret):
+    try:
+        return secret[setting]
+    except KeyError:
+        raise ImproperlyConfigured(f"Set the {setting} in secret.json file")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hfq$1fra3))@5^%9r6weiu=qv+i_b*edqt4r0)!p=2%8ili6r2'
+SECRET_KEY = get_secret('DJANGO_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,7 +71,18 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'users.User'
+
+# email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.naver.com'
+EMAIL_PORT = 587
+EMAIL = get_secret("EMAIL")
+EMAIL_HOST_USER = EMAIL["USER"]
+EMAIL_HOST_PASSWORD = EMAIL['PASSWORD']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -183,4 +211,3 @@ SUMMERNOTE_CONFIG = {
     # 첨부파일의 절대경로 URI 사용 설정
     'attachment_absolute_uri': True,
 }
-
